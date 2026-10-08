@@ -1,0 +1,5 @@
+I am initializing the repository 'dom-parser-python' using uv.
+Generate a pyproject.toml configured for Python 3.11+ with strict mypy, ruff, and pytest.
+Do not use any HTML parsing libraries. Ensure that the project builds in editable mode
+and defines a CLI entrypoint named 'domparser' targeting src/main.py:main.
+Explain the configuration options chosen.
