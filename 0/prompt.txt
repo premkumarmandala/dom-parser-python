@@ -1,0 +1,9 @@
+In src/main.py, implement CLI argument parsing and file reading adhering to Section 5:
+- Binary name: domparser
+- Arguments: FILE [--tree | --text | --find-tag TAG | --find-id ID | --find-class CLASS]
+- Missing or invalid arguments must print exact string to stderr and exit(1):
+  "Usage: domparser FILE [--tree | --text | --find-tag TAG | --find-id ID | --find-class CLASS]"
+- If the file cannot be opened (FileNotFoundError, PermissionError), print exact string to stderr and exit(1):
+  "Cannot open file: FILE"
+- For this phase, print the file content unchanged to stdout.
+Add strict type hints everywhere. Do not write the parser yet.
