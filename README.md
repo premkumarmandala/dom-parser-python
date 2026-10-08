@@ -1,18 +1,13 @@
-# Mini HTML Parser
+# dom-parser-python
 
-A small HTML tokenizer and DOM parser implemented in Python, without external
-HTML parsing libraries.
+A minimal DOM parser written from scratch — no HTML parsing libraries.
 
-## Project structure
+## Development
 
-```text
-dom-parser-python/
-├── src/
-├── tests/
-├── samples/
-├── expected/
-├── development-notes/
-└── README.md
+```bash
+uv sync --group dev
+uv run ruff check . && uv run ruff format --check .
+uv run mypy
+uv run pytest
+uv run domparser
 ```
-
-The implementation and tests will be added incrementally.
