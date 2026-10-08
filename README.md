@@ -3,11 +3,16 @@
 A small HTML tokenizer and DOM parser implemented in Python, without external
 HTML parsing libraries.
 
-This repository is at the project setup stage. The tokenizer, DOM model,
-parser, printer, command-line behavior, and tests will be added incrementally.
+## Project structure
 
-## Requirements
+```text
+dom-parser-python/
+├── src/
+├── tests/
+├── samples/
+├── expected/
+├── development-notes/
+└── README.md
+```
 
-- Python 3.10 or newer
-
-There are no third-party dependencies.
+The implementation and tests will be added incrementally.
