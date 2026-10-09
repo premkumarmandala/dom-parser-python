@@ -1,0 +1,8 @@
+Generate the following documentation and configuration files for `dom-parser-python`:
+
+1. `requirements-dev.txt`: Include dev dependencies (`mypy>=1.10.0`, `pytest>=8.0.0`, `ruff>=0.5.0`).
+2. `IMPLEMENTATION.md`: Document the pipeline (tokenizer -> parser + attributes -> DOM tree -> CLI), the stack-based DOM construction, character-by-character attribute parsing logic, and the project invariants (strictly no `re`, no external HTML libraries, no cyclic node references, `mypy --strict`).
+3. `README.md`: Include project overview, setup using `uv` / `pip`, CLI commands (`--tree`, `--text`, `--find-tag`, `--find-id`, `--find-class`), and testing instructions.
+4. `CONTRIBUTING.md`: Outline contribution rules, formatting guidelines, and required check commands (`pytest`, `mypy --strict`, `ruff`).
+
+Ensure all files are complete, properly formatted, and align with the existing `src/` layout.
