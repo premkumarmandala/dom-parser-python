@@ -99,7 +99,7 @@ ignore = [
 "tests/**" = ["ARG", "T20", "TID252"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["dom", "main", "parser", "tokenizer"]
+known-first-party = ["attributes", "dom", "main", "parser", "tokenizer"]
 
 [tool.ruff.format]
 quote-style = "double"

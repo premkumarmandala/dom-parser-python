@@ -9,17 +9,17 @@ import pytest
 
 from main import USAGE, main
 
-CONTENT: str = "<html>\n  <body>hello</body>\n</html>\n"
-EXPECTED_TOKEN_LINES: str = (
-    "OPEN_TAG: '<html>'\n"
-    "TEXT: '\\n  '\n"
-    "OPEN_TAG: '<body>'\n"
-    "TEXT: 'hello'\n"
-    "CLOSE_TAG: '</body>'\n"
-    "TEXT: '\\n'\n"
-    "CLOSE_TAG: '</html>'\n"
-    "TEXT: '\\n'\n"
+CONTENT: str = (
+    '<html>\n  <body id="main" class="page hero">\n    hello\n  </body>\n</html>\n'
 )
+
+HTML_OUT: str = (
+    '<html>\n  <body id="main" class="page hero">\n    hello\n  </body>\n</html>\n'
+)
+
+BODY_OUT: str = '<body id="main" class="page hero">\n  hello\n</body>\n'
+
+TEXT_OUT: str = "hello\n"
 
 
 @pytest.fixture()
@@ -57,23 +57,38 @@ def test_invalid_arguments_print_usage_to_stderr(
 
 
 @pytest.mark.parametrize(
-    "mode",
+    ("mode", "expected"),
     [
-        [],
-        ["--tree"],
-        ["--text"],
-        ["--find-tag", "div"],
-        ["--find-id", "main"],
-        ["--find-class", "hero"],
+        ([], HTML_OUT),
+        (["--tree"], HTML_OUT),
+        (["--text"], TEXT_OUT),
+        (["--find-tag", "body"], BODY_OUT),
+        (["--find-tag", "html"], HTML_OUT),
+        (["--find-tag", "BODY"], BODY_OUT),
+        (["--find-id", "main"], BODY_OUT),
+        (["--find-class", "hero"], BODY_OUT),
+        (["--find-class", "page"], BODY_OUT),
     ],
 )
-def test_valid_arguments_print_token_stream(
-    page: Path, mode: list[str], capsys: pytest.CaptureFixture[str]
+def test_valid_arguments_render(
+    page: Path,
+    mode: list[str],
+    expected: str,
+    capsys: pytest.CaptureFixture[str],
 ) -> None:
     argv: list[str] = [str(page), *mode]
     assert main(argv) == 0
     captured = capsys.readouterr()
-    assert captured.out == EXPECTED_TOKEN_LINES
+    assert captured.out == expected
+    assert captured.err == ""
+
+
+def test_find_with_no_match_prints_nothing(
+    page: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    assert main([str(page), "--find-tag", "div"]) == 0
+    captured = capsys.readouterr()
+    assert captured.out == ""
     assert captured.err == ""
 
 

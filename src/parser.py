@@ -2,34 +2,17 @@
 
 from __future__ import annotations
 
+from attributes import parse_tag
 from dom import DocumentNode, ElementNode, TextNode
 from tokenizer import Token, TokenKind
-
-
-def _tag_name(raw: str) -> str:
-    """Extract the tag name from a raw OPEN_TAG slice, ignoring attributes.
-
-    Args:
-        raw: Raw token text such as ``'<div class="hero">'``.
-
-    Returns:
-        The tag name, or '' if the token holds no name.
-    """
-    inner: str = raw
-    if inner.startswith("<"):
-        inner = inner[1:]
-    if inner.endswith(">"):
-        inner = inner[:-1]
-    parts: list[str] = inner.split(maxsplit=1)
-    return parts[0] if parts else ""
 
 
 def build_dom(tokens: list[Token]) -> DocumentNode:
     """Build a DOM tree from a token stream.
 
-    OPEN_TAG creates an ElementNode (attributes ignored for now) and pushes
-    it onto the stack of open elements; TEXT is whitespace-trimmed and
-    dropped when empty or when no element is open; CLOSE_TAG pops the stack.
+    OPEN_TAG creates an ElementNode (with parsed attributes) and pushes it
+    onto the stack of open elements; TEXT is whitespace-trimmed and dropped
+    when empty or when no element is open; CLOSE_TAG pops the stack.
     Elements left open at end of input stay in the tree.
 
     Args:
@@ -43,10 +26,12 @@ def build_dom(tokens: list[Token]) -> DocumentNode:
 
     for token in tokens:
         if token.kind is TokenKind.OPEN_TAG:
-            name: str = _tag_name(token.raw)
+            name: str
+            attributes: list[tuple[str, str]]
+            name, attributes = parse_tag(token.raw)
             if not name:
                 continue
-            element: ElementNode = ElementNode(tag=name)
+            element: ElementNode = ElementNode(tag=name, attributes=attributes)
             if stack:
                 stack[-1].children.append(element)
             else:

@@ -7,6 +7,14 @@ from enum import StrEnum
 from pathlib import Path
 from typing import NamedTuple
 
+from dom import (
+    DocumentNode,
+    ElementNode,
+    find_elements,
+    format_tree,
+    get_text_content,
+)
+from parser import build_dom
 from tokenizer import Token, tokenize
 
 USAGE: str = (
@@ -93,6 +101,32 @@ def _read_file(path: str) -> str | None:
         return None
 
 
+def _format_matches(elements: list[ElementNode]) -> str:
+    """Render matched elements, one formatted subtree per line block."""
+    return "\n".join(format_tree(element) for element in elements)
+
+
+def _render(document: DocumentNode, parsed: ParsedArgs) -> str:
+    """Render a document according to the selected output mode.
+
+    Args:
+        document: The parsed document tree.
+        parsed: Validated command-line arguments.
+
+    Returns:
+        The text to print, or '' when there is nothing to show.
+    """
+    if parsed.mode is Mode.TEXT:
+        return get_text_content(document)
+    if parsed.mode is Mode.FIND_TAG:
+        return _format_matches(find_elements(document, tag=parsed.value))
+    if parsed.mode is Mode.FIND_ID:
+        return _format_matches(find_elements(document, id_=parsed.value))
+    if parsed.mode is Mode.FIND_CLASS:
+        return _format_matches(find_elements(document, class_name=parsed.value))
+    return format_tree(document)
+
+
 def main(argv: list[str] | None = None) -> int:
     """Run the domparser CLI.
 
@@ -111,10 +145,11 @@ def main(argv: list[str] | None = None) -> int:
     if content is None:
         print(f"Cannot open file: {parsed.path}", file=sys.stderr)
         return 1
-    # Temporary: dump the token stream (parser not implemented yet).
     tokens: list[Token] = tokenize(content)
-    for token in tokens:
-        print(f"{token.kind}: {token.raw!r}")
+    document: DocumentNode = build_dom(tokens)
+    rendered: str = _render(document, parsed)
+    if rendered:
+        print(rendered)
     return 0
 
 

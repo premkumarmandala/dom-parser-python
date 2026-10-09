@@ -35,12 +35,60 @@ def test_text_is_trimmed() -> None:
     assert document.children[0].children == [TextNode(text="Hi there")]
 
 
-def test_attributes_are_ignored_for_now() -> None:
+def test_attributes_are_parsed() -> None:
     document: DocumentNode = build_dom(tokenize('<div class="hero" id="main">Hi</div>'))
     element: ElementNode = document.children[0]
     assert element.tag == "div"
-    assert element.attributes == []
+    assert element.attributes == [("class", "hero"), ("id", "main")]
     assert element.children == [TextNode(text="Hi")]
+
+
+def test_double_quoted_attribute() -> None:
+    document: DocumentNode = build_dom(tokenize('<a href="x">y</a>'))
+    assert document.children[0].attributes == [("href", "x")]
+
+
+def test_single_quoted_attribute() -> None:
+    document: DocumentNode = build_dom(tokenize("<a href='x'>y</a>"))
+    assert document.children[0].attributes == [("href", "x")]
+
+
+def test_unquoted_attribute() -> None:
+    document: DocumentNode = build_dom(tokenize("<input type=text>"))
+    assert document.children[0].attributes == [("type", "text")]
+
+
+def test_boolean_attribute_has_empty_value() -> None:
+    document: DocumentNode = build_dom(tokenize("<button disabled>Go</button>"))
+    assert document.children[0].attributes == [("disabled", "")]
+
+
+def test_whitespace_around_equals_is_ignored() -> None:
+    document: DocumentNode = build_dom(tokenize('<a href = "x">y</a>'))
+    assert document.children[0].attributes == [("href", "x")]
+
+
+def test_self_closing_tag_strips_trailing_slash() -> None:
+    document: DocumentNode = build_dom(tokenize('<img src="pic.jpg" />'))
+    assert document.children[0].tag == "img"
+    assert document.children[0].attributes == [("src", "pic.jpg")]
+
+
+def test_tag_and_attribute_names_are_lowercased() -> None:
+    document: DocumentNode = build_dom(tokenize('<DIV CLASS="hero">x</DIV>'))
+    assert document.children[0].tag == "div"
+    assert document.children[0].attributes == [("class", "hero")]
+
+
+def test_multiple_attributes_keep_source_order() -> None:
+    document: DocumentNode = build_dom(
+        tokenize('<a id="main" class="btn primary" href="/x">link</a>')
+    )
+    assert document.children[0].attributes == [
+        ("id", "main"),
+        ("class", "btn primary"),
+        ("href", "/x"),
+    ]
 
 
 def test_text_before_root_element_is_dropped() -> None:
