@@ -1,0 +1,69 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M4G4XJ89BKV5XF26JH31XB25",
+  "session_id": "ses_ee014d578ffeCSE4MvP5S5zE36",
+  "strategy": "manual-commit",
+  "created_at": "2026-10-09T10:56:41.135235446Z",
+  "branch": "main",
+  "checkpoints_count": 3,
+  "save_step_count": 4,
+  "files_touched": [
+    "attributes.html",
+    "deep.html",
+    "example.html",
+    "page.html",
+    "src/dom.py",
+    "src/main.py",
+    "tests/test_dom.py",
+    "tests/test_main.py"
+  ],
+  "agent": "OpenCode",
+  "model": "big-pickle",
+  "turn_id": "757589f1a2c5",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 78203,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 3251456,
+    "output_tokens": 20812,
+    "api_call_count": 71
+  },
+  "session_metrics": {
+    "turn_count": 10
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-10-09T10:56:41.108918167Z",
+    "agent_lines": 259,
+    "agent_removed": 61,
+    "human_added": 6164,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 6423,
+    "total_lines_changed": 6484,
+    "agent_percentage": 4.9352251696483656,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 107,
+      "agent_lines_removed": 23
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 107,
+      "agent_lines_removed": 23
+    },
+    {
+      "checkpoint_number": 4,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 107,
+      "agent_lines_removed": 23
+    }
+  ]
+}
