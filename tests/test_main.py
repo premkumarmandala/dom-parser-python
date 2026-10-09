@@ -14,10 +14,14 @@ CONTENT: str = (
 )
 
 HTML_OUT: str = (
-    '<html>\n  <body id="main" class="page hero">\n    hello\n  </body>\n</html>\n'
+    '.\n└── html\n    └── body [id="main", class="page hero"]\n        └── "hello"\n'
 )
 
-BODY_OUT: str = '<body id="main" class="page hero">\n  hello\n</body>\n'
+HTML_TAG_OUT: str = (
+    '.\n└── html\n    └── body [id="main", class="page hero"]\n        └── "hello"\n'
+)
+
+BODY_OUT: str = '.\n└── body [id="main", class="page hero"]\n    └── "hello"\n'
 
 TEXT_OUT: str = "hello\n"
 
@@ -63,7 +67,7 @@ def test_invalid_arguments_print_usage_to_stderr(
         (["--tree"], HTML_OUT),
         (["--text"], TEXT_OUT),
         (["--find-tag", "body"], BODY_OUT),
-        (["--find-tag", "html"], HTML_OUT),
+        (["--find-tag", "html"], HTML_TAG_OUT),
         (["--find-tag", "BODY"], BODY_OUT),
         (["--find-id", "main"], BODY_OUT),
         (["--find-class", "hero"], BODY_OUT),
@@ -83,12 +87,12 @@ def test_valid_arguments_render(
     assert captured.err == ""
 
 
-def test_find_with_no_match_prints_nothing(
+def test_find_with_no_match_prints_empty_tree(
     page: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     assert main([str(page), "--find-tag", "div"]) == 0
     captured = capsys.readouterr()
-    assert captured.out == ""
+    assert captured.out == ".\n"
     assert captured.err == ""
 
 

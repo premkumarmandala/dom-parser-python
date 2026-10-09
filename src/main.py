@@ -10,7 +10,7 @@ from typing import NamedTuple
 from dom import (
     DocumentNode,
     ElementNode,
-    find_elements,
+    find_root_elements,
     format_tree,
     get_text_content,
 )
@@ -102,8 +102,12 @@ def _read_file(path: str) -> str | None:
 
 
 def _format_matches(elements: list[ElementNode]) -> str:
-    """Render matched elements, one formatted subtree per line block."""
-    return "\n".join(format_tree(element) for element in elements)
+    """Render outermost matches as a document rooted at '.'.
+
+    The synthetic document means the output always starts with '.', even
+    when nothing matched, and each outer match keeps its full subtree.
+    """
+    return format_tree(DocumentNode(children=elements))
 
 
 def _render(document: DocumentNode, parsed: ParsedArgs) -> str:
@@ -119,11 +123,11 @@ def _render(document: DocumentNode, parsed: ParsedArgs) -> str:
     if parsed.mode is Mode.TEXT:
         return get_text_content(document)
     if parsed.mode is Mode.FIND_TAG:
-        return _format_matches(find_elements(document, tag=parsed.value))
+        return _format_matches(find_root_elements(document, tag=parsed.value))
     if parsed.mode is Mode.FIND_ID:
-        return _format_matches(find_elements(document, id_=parsed.value))
+        return _format_matches(find_root_elements(document, id_=parsed.value))
     if parsed.mode is Mode.FIND_CLASS:
-        return _format_matches(find_elements(document, class_name=parsed.value))
+        return _format_matches(find_root_elements(document, class_name=parsed.value))
     return format_tree(document)
 
 
