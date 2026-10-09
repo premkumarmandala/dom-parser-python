@@ -65,7 +65,7 @@ disallow_untyped_decorators = false
 line-length = 88
 target-version = "py311"
 src = ["src", "tests"]
-extend-exclude = [".entire", ".opencode"]
+extend-exclude = [".entire", ".opencode", "session-*.md"]
 
 [tool.ruff.lint]
 select = [
